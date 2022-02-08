@@ -9,6 +9,10 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 import pandahouse
 import telegram
 import io
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.covariance import EllipticEnvelope
+from sklearn.ensemble import IsolationForest
 
 connection = {
     'host': 'https://clickhouse.lab.karpov.courses',
