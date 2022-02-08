@@ -9,4 +9,5 @@ test_report_job:
     only:
         - schedules
     script:
+        - pip install statsmodels
         - python 05.alert-wip.py
