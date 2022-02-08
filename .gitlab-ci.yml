@@ -4,16 +4,9 @@ stages:
     - init
     - run
 
-installing_dependencies:
-    stage: init
-    only:
-        - schedules
-    script:
-        - pip install statsmodels
-
-test_report_job:
+report_job:
     stage: run
     only:
         - schedules
     script:
-        - python 05.alert-wip.py
+        - python 05.simple-prop-alert.py
