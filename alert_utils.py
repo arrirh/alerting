@@ -48,7 +48,7 @@ def is_alert(query_for_prop, query_for_STL, y, connection):
 
     is_alert_IF = (model.predict(data) == -1)[-1]
 
-    return int(is_alert_prop) + int(is_alert_resid) + int(is_alert_IF) >= 2
+    return int(is_alert_prop) + int(is_alert_resid)*0.5 + int(is_alert_IF)*0.5 >= 1
 
 
 def send_report(x, y, ylab, plot_title, plot_name, df, chat_id, bot,
