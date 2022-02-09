@@ -23,21 +23,46 @@ connection = {
 chat_id = 329018735
 bot = telegram.Bot(token='5181637517:AAEMTMNyqIEjMlr7HKAgPA1OnnoFiw_wf58')
 
-#проверяем DAU ленты
+#проверяем метрики ленты
 #_________________________________________________________________________
 
 
-df = pandahouse.read_clickhouse(query_dau_feed_testing_prop, connection=connection)
+df = pandahouse.read_clickhouse(query_feed_proportion, connection=connection)
 
-is_alert_prop = is_outliers_IQR(df, 'time15', 'dau_feed')
+is_alert_prop_dau = is_outliers_IQR(df, 'time15', 'dau_feed')
+is_alert_prop_view = is_outliers_IQR(df, 'time15', 'view')
+is_alert_prop_like = is_outliers_IQR(df, 'time15', 'like')
+is_alert_prop_ctr = is_outliers_IQR(df, 'time15', 'ctr')
 
-if is_alert_prop:
-    df = pandahouse.read_clickhouse(query_dau_feed_plotting_outlier, connection=connection)
+if is_alert_prop_dau:
+    df = pandahouse.read_clickhouse(query_feed_plotting, connection=connection)
     df = df.iloc[:-1]
-    send_report(x = 'minutes15', y = 'DAU', ylab = 'DAU', df = df, plot_title = 'Количество активных пользователей ленты', plot_name = 'dau_feed.png')
+    send_report(x = 'minutes15', y = 'DAU', ylab = 'DAU', df = df, plot_title = 'Количество активных пользователей ленты', plot_name = 'dau_feed.png', 
+            chat_id = chat_id, bot = bot)
+    print('Алерт DAU ленты отправлен')
+    
+if is_alert_prop_view:
+    df = pandahouse.read_clickhouse(query_feed_plotting, connection=connection)
+    df = df.iloc[:-1]
+    send_report(x = 'minutes15', y = 'view', ylab = 'Количество просмотров', df = df, plot_title = 'Количество просмотров', plot_name = 'view.png', 
+            chat_id = chat_id, bot = bot)
+    print('Алерт DAU ленты отправлен')
+    
+if is_alert_prop_like:
+    df = pandahouse.read_clickhouse(query_feed_plotting, connection=connection)
+    df = df.iloc[:-1]
+    send_report(x = 'minutes15', y = 'like', ylab = 'Количество лайков', df = df, plot_title = 'Количество лайков', plot_name = 'like.png', 
+            chat_id = chat_id, bot = bot)
+    print('Алерт DAU ленты отправлен')
+    
+if is_alert_prop_ctr:
+    df = pandahouse.read_clickhouse(query_feed_plotting, connection=connection)
+    df = df.iloc[:-1]
+    send_report(x = 'minutes15', y = 'ctr', ylab = 'CTR', df = df, plot_title = 'CTR', plot_name = 'ctr.png', 
+            chat_id = chat_id, bot = bot)
     print('Алерт DAU ленты отправлен')
 
-#проверяем DAU мессенджера
+#проверяем метрики мессенджера
 #_________________________________________________________________________
 
 
@@ -69,35 +94,6 @@ if is_alert_prop:
     print('Алерт количества сообщений отправлен')
 
     
-#проверяем просмотры
-#_________________________________________________________________________
-
-
-df = pandahouse.read_clickhouse(query_view_testing_prop, connection=connection)
-
-is_alert_prop = is_outliers_IQR(df, 'time15', 'view')
-
-if is_alert_prop:
-    df = pandahouse.read_clickhouse(query_view_plotting_outlier, connection=connection)
-    df = df.iloc[:-1]
-    send_report(x = 'minutes15', y = 'view', ylab = 'Количество просмотров', df = df, plot_title = 'Количество просмотров', plot_name = 'view.png')
-    print('Алерт количества просмотров отправлен')
-    
-    
-#проверяем лайки
-#_________________________________________________________________________
-
-
-df = pandahouse.read_clickhouse(query_like_testing_prop, connection=connection)
-
-is_alert_prop = is_outliers_IQR(df, 'time15', 'like')
-
-if is_alert_prop:
-    df = pandahouse.read_clickhouse(query_like_plotting_outlier, connection=connection)
-    df = df.iloc[:-1]
-    send_report(x = 'minutes15', y = 'like', ylab = 'Количество лайков', df = df, plot_title = 'Количество лайков', plot_name = 'like.png')
-    print('Алерт количества лайков отправлен')
-
 
 #Завершение
 #_________________________________________________________________________
