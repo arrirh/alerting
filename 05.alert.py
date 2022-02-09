@@ -24,7 +24,7 @@ connection = {
     'database': 'simulator'
 }
 
-chat_id = 329018735
+chat_id = -655725590
 bot = telegram.Bot(token='5181637517:AAEMTMNyqIEjMlr7HKAgPA1OnnoFiw_wf58')
 
 
