@@ -2,7 +2,7 @@
 #___________________________________________________________________________________________________________________________
 
 query_feed_proportion = '''
-select q_now.time15, q_now.dau/q_prev.dau as dau_feed, q_now.view/q_prev.view as view, q_now.like/q_prev.like as like, q_now.ctr/q_prev.ctr as ctr
+select q_now.time15 as minutes15, q_now.dau/q_prev.dau as dau_feed, q_now.view/q_prev.view as view, q_now.like/q_prev.like as like, q_now.ctr/q_prev.ctr as ctr
 from
 
 (select *, row_number() over(order by time15) rno from
@@ -82,7 +82,7 @@ on q_now.rno = q_prev.rno
 
 query_feed_plotting = '''
 SELECT toStartOfFifteenMinutes(toDateTime(time)) as minutes15, 
-        count(distinct user_id) as DAU,
+        count(distinct user_id) as dau_feed,
         countIf(action = 'view') as view,
         countIf(action = 'like') as like,
         countIf(action = 'like')/countIf(action = 'view') as ctr,
@@ -124,7 +124,7 @@ order by minutes15
 #___________________________________________________________________________________________________________________________
 
 query_message_proportion = '''
-select q_now.time15, q_now.dau/q_prev.dau as dau_mess, q_now.mess/q_prev.mess as messages
+select q_now.time15 as minutes15, q_now.dau/q_prev.dau as dau_mess, q_now.mess/q_prev.mess as messages
 from
 
 (select *, row_number() over(order by time15) rno from
@@ -203,8 +203,8 @@ on q_now.rno = q_prev.rno
 
 query_message_plotting = '''
 SELECT toStartOfFifteenMinutes(toDateTime(time)) as minutes15, 
-        count(distinct user_id) as DAU,
-        count(user_id) as Messages,
+        count(distinct user_id) as dau_mess,
+        count(user_id) as messages,
         'Неделю назад' as day_group
 FROM simulator_20220120.message_actions 
 where toDate(time) = toDate(dateadd(day, -7, toDate(now()))) 
@@ -215,7 +215,7 @@ union all
 
 SELECT toStartOfFifteenMinutes(toDateTime(time)) as minutes15, 
         count(distinct user_id) as DAU,
-        count(user_id) as Messages,
+        count(user_id) as messages,
         'Вчера' as day_group
 FROM simulator_20220120.message_actions 
 where toDate(time) = toDate(dateadd(day, -1, toDate(now()))) 
@@ -226,10 +226,38 @@ union all
 
 SELECT toStartOfFifteenMinutes(toDateTime(time)) as minutes15, 
         count(distinct user_id) as DAU,
-        count(user_id) as Messages,
+        count(user_id) as messages,
         'Сегодня' as day_group
 FROM simulator_20220120.message_actions 
 where toDate(time) = toDate(now()) 
 group by minutes15 
 order by minutes15
+'''
+
+#Feed STL query
+#___________________________________________________________________________________________________________________________
+
+query_feed_STL = '''
+SELECT toStartOfFiveMinute(toDateTime(time)) as minutes5, 
+        count(distinct user_id) as dau_feed,
+        countIf(action = 'view') as view,
+        countIf(action = 'like') as like,
+        countIf(action = 'like')/countIf(action = 'view') as ctr
+FROM simulator_20220120.feed_actions 
+where toDate(time) >= toDate(dateadd(day, -2, toDate(now()))) and time < now()
+group by minutes5 
+order by minutes5
+'''
+
+#Feed STL query
+#___________________________________________________________________________________________________________________________
+
+query_message_STL = '''
+SELECT toStartOfFiveMinute(toDateTime(time)) as minutes5, 
+        count(distinct user_id) as dau_mess,
+        count(user_id) as messages
+FROM simulator_20220120.message_actions 
+where toDate(time) >= toDate(dateadd(day, -2, toDate(now()))) and time < now()
+group by minutes5 
+order by minutes5
 '''
