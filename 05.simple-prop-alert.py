@@ -46,54 +46,45 @@ if is_alert_prop_view:
     df = df.iloc[:-1]
     send_report(x = 'minutes15', y = 'view', ylab = 'Количество просмотров', df = df, plot_title = 'Количество просмотров', plot_name = 'view.png', 
             chat_id = chat_id, bot = bot)
-    print('Алерт DAU ленты отправлен')
+    print('Алерт view ленты отправлен')
     
 if is_alert_prop_like:
     df = pandahouse.read_clickhouse(query_feed_plotting, connection=connection)
     df = df.iloc[:-1]
     send_report(x = 'minutes15', y = 'like', ylab = 'Количество лайков', df = df, plot_title = 'Количество лайков', plot_name = 'like.png', 
             chat_id = chat_id, bot = bot)
-    print('Алерт DAU ленты отправлен')
+    print('Алерт like ленты отправлен')
     
 if is_alert_prop_ctr:
     df = pandahouse.read_clickhouse(query_feed_plotting, connection=connection)
     df = df.iloc[:-1]
     send_report(x = 'minutes15', y = 'ctr', ylab = 'CTR', df = df, plot_title = 'CTR', plot_name = 'ctr.png', 
             chat_id = chat_id, bot = bot)
-    print('Алерт DAU ленты отправлен')
+    print('Алерт CTR ленты отправлен')
 
 #проверяем метрики мессенджера
 #_________________________________________________________________________
 
 
-df = pandahouse.read_clickhouse(query_dau_mess_testing_prop, connection=connection)
+df = pandahouse.read_clickhouse(query_message_proportion, connection=connection)
 
-is_alert_prop = is_outliers_IQR(df, 'time15', 'dau_mess')
+is_alert_prop_dau = is_outliers_IQR(df, 'time15', 'dau_mess')
+is_alert_prop_mess = is_outliers_IQR(df, 'time15', 'messages')
 
-if is_alert_prop:
-    df = pandahouse.read_clickhouse(query_dau_mess_plotting_outlier, connection=connection)
+if is_alert_prop_dau:
+    df = pandahouse.read_clickhouse(query_message_plotting, connection=connection)
     df = df.iloc[:-1]
     send_report(x = 'minutes15', y = 'DAU', ylab = 'DAU', df = df, plot_title = 'Количество активных пользователей мессенджера', plot_name = 'dau_mess.png', 
-                tag = '@Some_message_team_member')
+                tag = '@Some_message_team_member', chat_id = chat_id, bot = bot)
     print('Алерт DAU мессенджера отправлен')
     
-
-#проверяем количество сообщений
-#_________________________________________________________________________
-
-
-df = pandahouse.read_clickhouse(query_message_testing_prop, connection=connection)
-
-is_alert_prop = is_outliers_IQR(df, 'time15', 'messages')
-
-if is_alert_prop:
-    df = pandahouse.read_clickhouse(query_message_plotting_outlier, connection=connection)
+if is_alert_prop_dau:
+    df = pandahouse.read_clickhouse(query_message_plotting, connection=connection)
     df = df.iloc[:-1]
     send_report(x = 'minutes15', y = 'Messages', ylab = 'Количество сообщений', df = df, plot_title = 'Количество сообщений', plot_name = 'mess.png',
-                tag = '@Some_message_team_member')
-    print('Алерт количества сообщений отправлен')
-
-    
+                tag = '@Some_message_team_member', chat_id = chat_id, bot = bot)
+    print('Алерт количество сообщений отправлен')
+        
 
 #Завершение
 #_________________________________________________________________________
