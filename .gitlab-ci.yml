@@ -9,4 +9,4 @@ report_job:
     only:
         - schedules
     script:
-        - python 05.simple-prop-alert.py
+        - python 05.alert.py
