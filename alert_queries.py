@@ -238,26 +238,26 @@ order by minutes15
 #___________________________________________________________________________________________________________________________
 
 query_feed_STL = '''
-SELECT toStartOfFiveMinute(toDateTime(time)) as minutes5, 
+SELECT toStartOfFifteenMinutes(toDateTime(time)) as minutes15, 
         count(distinct user_id) as dau_feed,
         countIf(action = 'view') as view,
         countIf(action = 'like') as like,
         countIf(action = 'like')/countIf(action = 'view') as ctr
 FROM simulator_20220120.feed_actions 
 where toDate(time) >= toDate(dateadd(day, -2, toDate(now()))) and time < now()
-group by minutes5 
-order by minutes5
+group by minutes15 
+order by minutes15
 '''
 
 #Feed STL query
 #___________________________________________________________________________________________________________________________
 
 query_message_STL = '''
-SELECT toStartOfFiveMinute(toDateTime(time)) as minutes5, 
+SELECT toStartOfFifteenMinutes(toDateTime(time)) as minutes15, 
         count(distinct user_id) as dau_mess,
         count(user_id) as messages
 FROM simulator_20220120.message_actions 
 where toDate(time) >= toDate(dateadd(day, -2, toDate(now()))) and time < now()
-group by minutes5 
-order by minutes5
+group by minutes15 
+order by minutes15
 '''
