@@ -23,6 +23,9 @@ def send_report(x, y, ylab, plot_title, plot_name, df,
     df['time'] = df[x].apply(lambda x: x.time()) #преобразование времени для графика
     df['time'] = pd.to_datetime(df.time, format = '%H:%M:%S')
 
+    chat_id = 329018735
+    bot = telegram.Bot(token='5181637517:AAEMTMNyqIEjMlr7HKAgPA1OnnoFiw_wf58')
+
     plt.rc('figure',figsize = figsize)
     plt.rc('font', size = fontsize)
     ax = plt.gca()
