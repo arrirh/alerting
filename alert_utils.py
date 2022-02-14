@@ -28,12 +28,12 @@ def is_alert(query_for_prop, query_for_STL, y, connection):
     #2
     df = pandahouse.read_clickhouse(query_for_STL, connection=connection)
 
-    df = df[['minutes5', y]]
-    datetime_series = pd.to_datetime(df['minutes5'])
+    df = df[['minutes15', y]]
+    datetime_series = pd.to_datetime(df['minutes15'])
     datetime_index = pd.DatetimeIndex(datetime_series.values)
 
     df_for_STL = df.set_index(datetime_index)
-    df_for_STL.drop('minutes5', axis = 1, inplace = True)
+    df_for_STL.drop('minutes15', axis = 1, inplace = True)
 
     result = seasonal_decompose(df_for_STL, period = 2, model='additive')
 
